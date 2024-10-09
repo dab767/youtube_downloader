@@ -1,4 +1,5 @@
 from pytubefix import YouTube
+import os
 
 def on_progress(stream, chunk, bytes_remaining):
     """Callback function"""
@@ -7,6 +8,8 @@ def on_progress(stream, chunk, bytes_remaining):
     pct_completed = bytes_downloaded / total_size * 100
     print(f"Status: {round(pct_completed, 2)} %")
 
+if not os.path.exists('./download'):
+    os.mkdir('./download')
 
 download_directory = './download/'
 url = str(input('Bitte Youtube-URL angeben: '))

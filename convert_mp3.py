@@ -1,5 +1,8 @@
 import os, subprocess, glob
 
+if not os.path.exists('./music'):
+    os.mkdir('./music')
+    
 downloadDirectory = './download/'
 musicDirectory = './music/'
 
