@@ -1,5 +1,8 @@
 customtkinter==5.2.2
 darkdetect==0.8.0
 mutagen==1.47.0
+numpy==2.1.2
 packaging==24.1
+pillow==10.4.0
+pyglet==2.0.18
 pytubefix==7.4.0
