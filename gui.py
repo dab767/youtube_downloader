@@ -33,7 +33,7 @@ customtkinter.set_appearance_mode('System')
 customtkinter.set_default_color_theme('green')
 
 app = customtkinter.CTk()
-app.geometry('720x480')
+#app.geometry('720x480')
 app.title('Youtube to MP3 converter')
 
 title = customtkinter.CTkLabel(app, text="Insert a youtube link")
