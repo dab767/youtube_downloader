@@ -14,31 +14,37 @@ if not os.path.exists('./download'):
 downloadDirectory = './download/'
 musicDirectory = './music/'
 
-def moveMP3toUserDir():
-    directoryEntrys = glob.glob('./music/*.mp3')
+def moveMP3toUserDir(directory):
+    directoryEntrys = glob.glob(f'{directory}/*.mp3')
 
     for files in directoryEntrys:
         shutil.move(files, os.path.expanduser('~') + '/Musik')
 
-def mp3Tag():
-    directoryContent = glob.glob(f"{musicDirectory}*.mp3")
+def mp3Tag(directory):
+    directoryContent = glob.glob(f"{directory}*.mp3")
     
-    for files in directoryContent:
-        fileName = files.split('/')[2]
-        artist, title = fileName.split('-')
+    try:
+        for files in directoryContent:
+            fileName = files.split('/')[2]
+            artist, title = fileName.split('-')
 
-        mp3Tag = MP3(files, ID3=EasyID3)
+            mp3Tag = MP3(files, ID3=EasyID3)
 
-        mp3Tag['title'] = [title.split('.')[0]]
-        mp3Tag['artist'] = [artist]
-        mp3Tag.save()
-
+            mp3Tag['title'] = [title.split('.')[0]]
+            mp3Tag['artist'] = [artist]
+            mp3Tag.save()
+            
+            return True
+    except:
+        return False
 
 def convert_video_to_mp3(input_file, output_file):
     ffmpeg_cmd = ['ffmpeg','-i', input_file,'-vn','-acodec', 'libmp3lame','-ab', '192k','-ar', '44100','-y',output_file]
     
     try:
         subprocess.run(ffmpeg_cmd, check=True)
+        os.remove(input_file)
+        
         print('Successfully converted!')
         return True
     except subprocess.CalledProcessError as e:
@@ -60,11 +66,11 @@ def download_convert():
     filename = file_tmp[-1]
     base, ext = filename.split(".")
     
-    if convert_video_to_mp3(filepath, f"./music/{base}.mp3"):
-        mp3Tag()
-        moveMP3toUserDir()
-        
+    if convert_video_to_mp3(filepath, f"./music/{base}.mp3"):        
+        mp3Tag(musicDirectory)        
         finishLabel.configure(text="Download and converting complete")
+        
+    moveMP3toUserDir(musicDirectory)
   except:
     finishLabel.configure(text='Youtube link is invalid', text_color='red')
   
