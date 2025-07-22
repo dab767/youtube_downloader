@@ -30,6 +30,7 @@ directory_content = glob.glob(downloadDirectory+'*.*')
 for files in directory_content:
     fileNames = files.split('/')[2]
     base, ext = fileNames.split('.')
+    
 
     convert_video_to_mp3(downloadDirectory + fileNames, musicDirectory + base + '.mp3')
 

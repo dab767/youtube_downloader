@@ -26,13 +26,18 @@ def mp3Tag(directory):
     try:
         for files in directoryContent:
             fileName = files.split('/')[2]
-            artist, title = fileName.split('-')
-
-            mp3Tag = MP3(files, ID3=EasyID3)
-
-            mp3Tag['title'] = [title.split('.')[0]]
-            mp3Tag['artist'] = [artist]
-            mp3Tag.save()
+    
+            mp3Tag = MP3(files, ID3=EasyID3)    
+            
+            if(len(fileName.split('-')) == 2):
+                artist, title = fileName.split('-')
+                mp3Tag['title'] = [title.split('.')[0]]
+                mp3Tag['artist'] = [artist]
+                mp3Tag.save()
+            else:
+                title = fileName.split('.')
+                mp3Tag['title'] = title[0]
+                mp3Tag.save()
             
             return True
     except:
@@ -42,7 +47,7 @@ def convert_video_to_mp3(input_file, output_file):
     ffmpeg_cmd = ['ffmpeg','-i', input_file,'-vn','-acodec', 'libmp3lame','-ab', '192k','-ar', '44100','-y',output_file]
     
     try:
-        subprocess.run(ffmpeg_cmd, check=True)
+        return_code = subprocess.run(ffmpeg_cmd, check=True)
         os.remove(input_file)
         
         print('Successfully converted!')
@@ -57,7 +62,7 @@ def download_convert():
     finishLabel.configure(text='')
     
     youtube_link = link.get()
-    youtube_obj = YouTube(youtube_link, on_progress_callback=on_progress)
+    youtube_obj = YouTube(youtube_link, 'WEB', on_progress_callback=on_progress)
     
           
     audio = youtube_obj.streams.get_audio_only()
@@ -70,10 +75,11 @@ def download_convert():
         mp3Tag(musicDirectory)        
         finishLabel.configure(text="Download and converting complete")
         
+        
     moveMP3toUserDir(musicDirectory)
   except:
     finishLabel.configure(text='Youtube link is invalid', text_color='red')
-  
+    
 
 def on_progress(stream, chunk, bytes_remaining):
     """Callback function"""

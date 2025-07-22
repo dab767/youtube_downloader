@@ -14,7 +14,10 @@ if not os.path.exists('./download'):
 download_directory = './download/'
 url = str(input('Bitte Youtube-URL angeben: '))
 
-yt = YouTube(url, on_progress_callback=on_progress)
+yt = YouTube(url, 'WEB', on_progress_callback=on_progress);
+
+print(yt.title);
+
 ys = yt.streams.get_audio_only()
 
 out = ys.download(output_path=download_directory)
